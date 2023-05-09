@@ -298,6 +298,8 @@ func getCheckpoint(ctx context.Context, httpClient util.HTTPDoer, info EventHubI
 		return Checkpoint{}, err
 	}
 
+	fmt.Println("downoad completed")
+
 	return checkpointer.extractCheckpoint(get)
 }
 
