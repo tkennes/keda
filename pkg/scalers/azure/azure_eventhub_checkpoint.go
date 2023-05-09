@@ -290,7 +290,7 @@ func getCheckpoint(ctx context.Context, httpClient util.HTTPDoer, info EventHubI
 
 	baseURL := storageEndpoint.ResolveReference(path)
 
-	fmt.Println(baseUrl)
+	fmt.Println(baseURL)
 	fmt.Println("Now downloading blob")
 
 	get, err := downloadBlob(ctx, baseURL, blobCreds)
