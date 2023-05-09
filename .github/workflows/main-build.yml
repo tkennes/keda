@@ -1,7 +1,8 @@
 name: main-build
 on:
-  push
-
+  push:
+    branches:
+      - main
 jobs:
   build:
     name: build
@@ -42,6 +43,7 @@ jobs:
       - name: Go modules sync
         run: go mod tidy -compat=1.20
 
+      # https://github.com/sigstore/cosign-installer
       - name: Push to Docker Hub
         uses: docker/build-push-action@v1 # Info: https://github.com/docker/build-push-action/tree/releases/v1#tags
         with:
@@ -51,3 +53,5 @@ jobs:
           tag_with_ref: true # Info: https://github.com/docker/build-push-action/tree/releases/v1#tag_with_ref
           tag_with_sha: true # Info: https://github.com/docker/build-push-action/tree/releases/v1#tag_with_sha
           tags: latest
+
+
