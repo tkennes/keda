@@ -265,6 +265,8 @@ func getCheckpoint(ctx context.Context, httpClient util.HTTPDoer, info EventHubI
 		podIdentity.Provider = kedav1alpha1.PodIdentityProviderNone
 	}
 
+	fmt.Println("Now in custom print statements")
+	fmt.Println(info.StorageConnection)
 	if podIdentity.Provider == kedav1alpha1.PodIdentityProviderAzure || podIdentity.Provider == kedav1alpha1.PodIdentityProviderAzureWorkload {
 		if len(info.StorageAccountName) == 0 {
 			return Checkpoint{}, fmt.Errorf("storageAccountName not supplied when PodIdentity authentication is enabled")
@@ -273,6 +275,9 @@ func getCheckpoint(ctx context.Context, httpClient util.HTTPDoer, info EventHubI
 
 	blobCreds, storageEndpoint, err := ParseAzureStorageBlobConnection(ctx, httpClient,
 		podIdentity, info.StorageConnection, info.StorageAccountName, info.BlobStorageEndpoint)
+
+	fmt.Println(blobCreds)
+	fmt.Println(storageEndpoint)
 
 	if err != nil {
 		return Checkpoint{}, err
@@ -284,6 +289,9 @@ func getCheckpoint(ctx context.Context, httpClient util.HTTPDoer, info EventHubI
 	}
 
 	baseURL := storageEndpoint.ResolveReference(path)
+
+	fmt.Println(baseUrl)
+	fmt.Println("Now downloading blob")
 
 	get, err := downloadBlob(ctx, baseURL, blobCreds)
 	if err != nil {
@@ -344,6 +352,9 @@ func readToCheckpointFromBody(get *azblob.DownloadResponse, checkpoint interface
 
 func downloadBlob(ctx context.Context, baseURL *url.URL, blobCreds azblob.Credential) (*azblob.DownloadResponse, error) {
 	blobURL := azblob.NewBlockBlobURL(*baseURL, azblob.NewPipeline(blobCreds, azblob.PipelineOptions{}))
+
+
+	fmt.Println(blobURL)
 
 	get, err := blobURL.Download(ctx, 0, 0, azblob.BlobAccessConditions{}, false, azblob.ClientProvidedKeyOptions{})
 	if err != nil {
